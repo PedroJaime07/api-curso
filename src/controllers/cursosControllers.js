@@ -3,7 +3,7 @@ const db = require('../db/index')
 exports.postCursos = (req, res) => {
   const { titulo, descricao, thumbnail, categoria } = req.body;
   const sql = `
-        INSERT INTO cursos (titulo, descricao, thumbnail, categoria) VALUES (?,?,?,?)
+        INSERT INTO cursos (titulo, descricao, thumbnail, categoria) VALUES ($1, $2, $3, $4)
     `;
 
   db.query(sql, [titulo, descricao, thumbnail, categoria], (err, results) => {
@@ -29,7 +29,7 @@ exports.getCursos = (req, res) => {
 
 exports.deleteCursos = (req, res) => {
   const {id} = req.params
-  const sql = `DELETE FROM cursos WHERE id = ?`
+  const sql = `DELETE FROM cursos WHERE id = $1`
 
   db.query(sql, [id], (err, results) => {
     if(err) {

@@ -1,19 +1,19 @@
-const mysql = require("mysql2");
+require("dotenv").config();
+const { Client } = require('pg')
 
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "cmaia123",
-  database: "curso_programacao",
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-db.connect((err) => {
+client.connect((err) => {
   if (err) {
-    console.log("Error ao se conectar com o banco")
+    console.log("Error ao se conectar com o banco");
   } else {
-    console.log("Conexão estabelecida com sucesso")
+    console.log("Conexão estabelecida com sucesso");
   }
-})
+});
 
-
-module.exports = db
+module.exports = client;

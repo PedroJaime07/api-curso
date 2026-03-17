@@ -3,7 +3,7 @@ const db = require("../db/index");
 exports.postVideos = (req, res) => {
   const { titulo, descricao, youtube_id, duracao, ordem, curso_id } = req.body;
   const sql = `
-        INSERT INTO videos (titulo, descricao, youtube_id, duracao, ordem, curso_id) VALUES (?,?,?,?,?,?)
+        INSERT INTO videos (titulo, descricao, youtube_id, duracao, ordem, curso_id) VALUES ($1, $2, $3, $4, $5, $6)
     `;
   db.query(
     sql,
@@ -32,7 +32,7 @@ exports.getVideos = (req, res) => {
 exports.getVideosByCurso = (req, res) => {
   const {cursoId} = req.params
 
-  const sql = "SELECT * FROM videos WHERE curso_id = ? ORDER BY ordem";
+  const sql = "SELECT * FROM videos WHERE curso_id = $1 ORDER BY ordem";
 
   db.query(sql, [cursoId], (err, results) => {
     if(err) {
