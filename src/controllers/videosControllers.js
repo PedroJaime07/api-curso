@@ -4,15 +4,16 @@ exports.postVideos = (req, res) => {
   const { titulo, descricao, youtube_id, duracao, ordem, curso_id } = req.body;
   const sql = `
         INSERT INTO videos (titulo, descricao, youtube_id, duracao, ordem, curso_id) VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
     `;
   db.query(
     sql,
     [titulo, descricao, youtube_id, duracao, ordem, curso_id],
     (err, results) => {
       if (err) {
-        return res.status(500).send(err);
+        return res.status(500).json({ erro: err.message });
       } else {
-        res.status(201).json({ mensagem: "Video adicionado com sucesso" });
+        res.status(201).json(results.rows[0]);
       }
     },
   );
@@ -24,7 +25,7 @@ exports.getVideos = (req, res) => {
     if (err) {
       return res.status(500).send(err);
     } else {
-      res.json(results);
+      res.json(results.rows);
     }
   });
 };
@@ -38,7 +39,7 @@ exports.getVideosByCurso = (req, res) => {
     if(err) {
       return res.status(500).send(err)
     } else {
-      res.json(results)
+      res.json(results.rows)
     }
   })
 };

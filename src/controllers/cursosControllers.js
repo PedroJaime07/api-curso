@@ -3,14 +3,14 @@ const db = require('../db/index')
 exports.postCursos = (req, res) => {
   const { titulo, descricao, thumbnail, categoria } = req.body;
   const sql = `
-        INSERT INTO cursos (titulo, descricao, thumbnail, categoria) VALUES ($1, $2, $3, $4)
+        INSERT INTO cursos (titulo, descricao, thumbnail, categoria) VALUES ($1, $2, $3, $4) RETURNING *
     `;
 
   db.query(sql, [titulo, descricao, thumbnail, categoria], (err, results) => {
     if (err) {
       return res.status(500).send(err);
     } else {
-      res.status(201).json({ mensagem: "Curso adicionado com sucesso" });
+      res.status(201).json(results.rows[0]);
     }
   });
 }
@@ -21,7 +21,7 @@ exports.getCursos = (req, res) => {
     if (err) {
       return res.status(500).send(err);
     } else {
-      res.json(results);
+      res.json(results.rows);
     }
   });
 }
