@@ -44,3 +44,27 @@ exports.getVideosByCurso = (req, res) => {
   })
 };
 
+exports.updateVideo = (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, url, ordem } = req.body;
+
+  const sql = `
+    UPDATE videos 
+    SET titulo = $1, descricao = $2, url = $3, ordem = $4
+    WHERE id = $5
+    RETURNING *
+  `;
+
+  db.query(sql, [titulo, descricao, url, ordem, id], (err, results) => {
+    if (err) {
+      console.error("ERRO AO ATUALIZAR:", err);
+      return res.status(500).json(err);
+    }
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: "Vídeo não encontrado" });
+    }
+
+    res.json(results.rows[0]);
+  });
+};
