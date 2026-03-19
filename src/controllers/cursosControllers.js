@@ -26,6 +26,23 @@ exports.getCursos = (req, res) => {
   });
 }
 
+exports.getCursoById = (req, res) => {
+  const { id } = req.params;
+
+  const sql = "SELECT * FROM cursos WHERE id = $1";
+  
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: "Curso não encontrado" });
+    }
+
+    res.json(results.rows[0]);
+  });
+};
 
 exports.deleteCursos = (req, res) => {
   const {id} = req.params
