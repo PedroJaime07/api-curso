@@ -4,7 +4,7 @@ const controller = require('../controllers/cursosControllers')
 
 router.post('/', controller.postCursos)
 router.get('/', controller.getCursos)
-router.get('/cursos/:id', constroller.getCursoById);
+router.get('/:id', constroller.getCursoById);
 router.delete('/:id', controller.deleteCursos)
 
 module.exports = router
