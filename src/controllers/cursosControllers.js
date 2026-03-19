@@ -8,6 +8,7 @@ exports.postCursos = (req, res) => {
 
   db.query(sql, [titulo, descricao, thumbnail, categoria], (err, results) => {
     if (err) {
+      console.error("ERRO REAL DO BANCO:", err);
       return res.status(500).send(err);
     } else {
       res.status(201).json(results.rows[0]);
