@@ -45,6 +45,34 @@ exports.getCursoById = (req, res) => {
   });
 };
 
+exports.updateCurso = (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, thumbnail, categoria } = req.body;
+
+  const sql = `
+    UPDATE cursos
+    SET titulo = $1,
+        descricao = $2,
+        thumbnail = $3,
+        categoria = $4
+    WHERE id = $5
+    RETURNING *
+  `;
+
+  db.query(sql, [titulo, descricao, thumbnail, categoria, id], (err, results) => {
+    if (err) {
+      console.error("ERRO AO ATUALIZAR:", err);
+      return res.status(500).send(err);
+    }
+
+    if (results.rows.length === 0) {
+      return res.status(404).json({ message: "Curso não encontrado" });
+    }
+
+    res.status(200).json(results.rows[0]);
+  });
+};
+
 exports.deleteCursos = (req, res) => {
   const {id} = req.params
   const sql = `DELETE FROM cursos WHERE id = $1`
