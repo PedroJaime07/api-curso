@@ -44,21 +44,14 @@ exports.getVideosByCurso = (req, res) => {
   })
 };
 
-exports.updateVideo = (req, res) => {
+exports.getVideoById = (req, res) => {
   const { id } = req.params;
-  const { titulo, descricao, url, ordem } = req.body;
 
-  const sql = `
-    UPDATE videos 
-    SET titulo = $1, descricao = $2, url = $3, ordem = $4
-    WHERE id = $5
-    RETURNING *
-  `;
+  const sql = "SELECT * FROM videos WHERE id = $1";
 
-  db.query(sql, [titulo, descricao, url, ordem, id], (err, results) => {
+  db.query(sql, [id], (err, results) => {
     if (err) {
-      console.error("ERRO AO ATUALIZAR:", err);
-      return res.status(500).json(err);
+      return res.status(500).send(err);
     }
 
     if (results.rows.length === 0) {
@@ -67,4 +60,38 @@ exports.updateVideo = (req, res) => {
 
     res.json(results.rows[0]);
   });
+};
+
+exports.updateVideo = (req, res) => {
+  const { id } = req.params;
+  const { titulo, descricao, youtube_id, duracao, ordem, curso_id } = req.body;
+
+  const sql = `
+    UPDATE videos 
+    SET titulo = $1, 
+        descricao = $2, 
+        youtube_id = $3, 
+        duracao = $4,
+        ordem = $5,
+        curso_id = $6
+    WHERE id = $7
+    RETURNING *
+  `;
+
+  db.query(
+    sql,
+    [titulo, descricao, youtube_id, duracao, ordem, curso_id, id],
+    (err, results) => {
+      if (err) {
+        console.error("ERRO AO ATUALIZAR:", err);
+        return res.status(500).json(err);
+      }
+
+      if (results.rows.length === 0) {
+        return res.status(404).json({ message: "Vídeo não encontrado" });
+      }
+
+      res.json(results.rows[0]);
+    }
+  );
 };
