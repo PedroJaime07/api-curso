@@ -13,7 +13,7 @@ exports.postVideos = (req, res) => {
       if (err) {
         return res.status(500).json({ erro: err.message });
       } else {
-        res.status(201).json(results.rows[0]);
+        res.status(201).json(results.rows);
       }
     },
   );
@@ -58,7 +58,7 @@ exports.getVideoById = (req, res) => {
       return res.status(404).json({ message: "Vídeo não encontrado" });
     }
 
-    res.json(results.rows[0]);
+    res.json(results.rows);
   });
 };
 
@@ -91,7 +91,7 @@ exports.updateVideo = (req, res) => {
         return res.status(404).json({ message: "Vídeo não encontrado" });
       }
 
-      res.json(results.rows[0]);
+      res.json(results.rows);
     }
   );
 };
